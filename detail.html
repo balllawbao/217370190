@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>system</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" type="text/css" href="../static/main/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/animate.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/bootstrap-select.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/awesome-bootstrap-checkbox.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/select2.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/style.css">
+	<link rel="stylesheet" type="text/css" href="../static/main/css/theme.css">
+	<link rel="stylesheet" type="text/css" href="../static/page.css">
+
+	<script src="../static/jquery-2.1.4.js"></script>
+	<script src="../static/bootstrap-3.3.7-dist 2/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../static/main/js/Chart.min.js"></script>
+	<script type="text/javascript" src="../static/main/js/bootstrap-select.min.js"></script>
+	<script type="text/javascript" src="../static/main/js/main.js"></script>
+	<script type="text/javascript" src="../static/main/js/index.js"></script>
+	<script type="text/javascript" src="../static/page.js"></script>
+	<script type="text/javascript" src="../static/Convert_Pinyin.js"></script>
+	<script type="text/javascript" src="../static/jquery.form.js"></script>
+
+	<style type="text/css">
+		.aline {
+			color: black;
+			padding: 5px 10px;
+			box-shadow: 10px 10px 5px #888888;
+			cursor: pointer;
+			margin-bottom: 15px;
+			border: 1px solid lightgray;
+			margin-top: 15px;
+		}
+
+		video{
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+
+<body class="flat-blue sidebar-collapse">
+	<div class="sidebar">
+		<div class="menu-control toggle-sidebar">
+			<a class="navbar-brand" href="#"><i class="fa fa-bar-chart"></i><span class="atitel"></span></a>
+			<i class="fa fa-bars navicon"></i>
+		</div>
+
+	</div>
+	<div class="content-container wrap">
+		<nav class="navbar navbar-default">
+			<div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="#"><i class="fa fa-bar-chart"></i> <span class="atitel"></span></a>
+					</div>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-12">
+					<span class="page-title red"><h2 class="atitel"></h2></span>
+				</div>
+			</div>
+			<div id="showdiv">
+				<button id="aback">back</button>
+				<div class="row">
+					<div class="col-sm-1 col-lg-4"></div>
+
+					<div class="col-lg-4 col-sm-10" id="acontentDiv">
+
+					</div>
+
+					<div class="col-lg-4 col-sm-1 "></div>
+				</div>
+				<div class="row">
+					<div class="col-sm-1 col-lg-4"></div>
+
+					<div class="col-lg-4 col-sm-10">
+						<div class="line">comment list</div>
+						<input type="text" name="" id="tx" placeholder="enter "><button id="acommentBtn">submit</button>
+						<div  id="acomment" style=""></div>
+					</div>
+
+					<div class="col-lg-4 col-sm-1 "></div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer class="footer">
+		<span><i class="fa fa-copyright"></i> system </span>
+	</footer>
+	<script type="text/javascript" src="public_left.js"></script>
+
+	<script type="application/javascript">
+		loadIndex(0)
+		$.ajaxSetup({
+  async: false
+  });
+		$('.atitel').each(function(i,o){
+			$(o).text('recipe')
+		})
+		setTimeout(function(){
+			loadIndex('recipe')
+		},1000)
+		function getQueryString(name) {　　
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");　　
+			var r = window.location.search.substr(1).match(reg);　　
+			if(r != null) return decodeURI(r[2]);
+			return null;
+		}
+		var dic = {}
+		var vdic = {}
+		$.post(window.localStorage.baseUrl+'getdatabykey2',{'database': 'app',
+			'table': 'recipeManagement','id':getQueryString('id')},function(data){
+				var data=data.data
+				for (var i = data.length - 1; i >= 0; i--) {
+
+					for(var j in data[i]){
+						dic[j]=data[i][j]
+						vdic[j]=data[i][j]
+					}
+					$('#acontentDiv').append('<h1 style="text-align:center"  >'+dic["RecipeName"]+'<button style="font-size:18px;"id="scBtn">collection</button></h1>')
+					$('#acontentDiv').append('<img src="'+dic["recipePicture"]+'" />')
+					$('#acontentDiv').append('<div>'+dic["recipeIntroduction"]+'</div>')
+				}
+			})
+
+		$('#aback').click(function(){
+			location.href="kong.html"
+		})
+
+		$('#scBtn').click(function(){
+			vdic["Collector"]=nowname
+			vdic["SuoShuRen"]=nowname
+			vdic["collectionTime"]=getnowdate()
+			vdic["table"]='CollectionManagement'
+			vdic["database"]='app'
+			vdic["RecipeName"]=vdic["RecipeName"]
+			delete vdic["id"]
+			$.post(window.localStorage.baseUrl+'savedata',vdic,function(){
+				alert("success")
+			})
+		})
+		$('#acommentBtn').click(function(){
+			dic["Reviewer"]=nowname
+			dic["commentTime"]=getnowdate()
+			dic["commentContent"]=$('#tx').val()
+			dic["table"]='CommentManagement'
+			dic["SuoShuRen"]=nowname
+			dic["database"]='app'
+			delete dic["id"]
+			$.post(window.localStorage.baseUrl+'savedata',dic,function(){
+				alert("success")
+				load()
+			})
+		})
+
+		function load(){
+			$.post(window.localStorage.baseUrl+'getdatabykey2',{database: 'app',
+				table: 'CommentManagement'},function(data){
+					var data = data.data
+					$('#acomment').html('')
+					for (var i = data.length - 1; i >= 0; i--) {
+						var adic = data[i]
+						$('#acomment').append('<div class="aline">'+
+							'<p>Reviewer:'+adic["Reviewer"]+'</p>'+
+							'<p style="text-indent:15px">commentContent:'+adic["commentContent"]+'</p>'+
+							'<p style="text-align:right">commentTime:'+adic["commentTime"]+'</p>'+
+							'</div>')
+					}
+				})
+		}
+		load()
+	</script>
+</body>
+
+</html>

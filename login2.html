@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>登录</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../static/login2/css/style.css" />
+		<script type="text/javascript" src="../static/jquery-2.1.4.js"></script>
+			<script type="text/javascript" src="../static/Convert_Pinyin.js"></script>
+	<script type="text/javascript" src="../static/jquery.form.js"></script>
+
+	</head>
+	<body>
+		<div class="container">
+			<div class="main">
+				<div class="bg"></div>
+				<form class="formone" id="denglu" action="/" method="get">
+					<div class="title">login</div>
+					<div class="username"><input type="text" name="username" id="" v-model="username" value="" placeholder="acount" /></div>
+					<div class="password"><input type="password" name="password" v-model="password" id="" value="" placeholder="password" /></div>
+					<!-- <div class="verification">是否验证？</div> -->
+					<div class="loginbtn" onclick="denglu()">
+						<div class="btnbg">login</div><button type="button">login</button>
+					</div>
+					<div class="registerbtn">
+						<div class="btnbg">regist</div><button type="button">regist</button>
+					</div>
+				</form>
+				<div class="registerpage">
+					<form class="formtwo" id="zhuce" action="/" method="">
+						<div class="registertitle">regist</div>
+						<div class="savename"><input type="text" name="username" id="username" value="" placeholder="acount"/></div>
+						<div class="savepassword"><input type="password" name="password" id="password" value="" placeholder="password"/></div>
+						<div class="btn_list">
+							<div class="okbtn"  onclick="zhuce()"><button type="button">comfirm</button></div>
+							<div class="resetbtn"><button type="button">cancel</button></div>
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+				window.localStorage.baseUrl  = 'http://localhost:3000/'; 
+
+		let formone=document.querySelector('.formone');
+		let registerpage=document.querySelector('.registerpage');
+		let registerbtn=document.querySelector('.registerbtn');
+		let resetbtn=document.querySelector('.resetbtn');
+		registerbtn.addEventListener("click",()=>{
+			formone.style.display='none';
+			registerpage.style.display="flex";
+		})
+		resetbtn.addEventListener("click",()=>{
+			formone.style.display='flex';
+			registerpage.style.display="none";
+		})
+
+		var dic = {}
+		var nname = ''
+		function zhuce(){
+			if($('#username').val()==''||$('#password').val()==''){
+				alert("请完善信息");
+				return
+			}
+			var a = $("#zhuce").serializeArray()
+			for(var i in a){
+				var d = a[i]
+				dic[d["name"]]=d["value"]
+			}
+			nname=dic["username"]
+
+			var dic2 = {}
+			dic2["table"]=pinyin.getFullChars("usermanage")
+			dic2["database"]='admin'
+			$.get(window.localStorage.baseUrl+'getdata',dic2,function(data){
+				var arr =  data.data
+				for(var i in arr){
+					var d = arr[i]
+					if (d["username"]==nname) {
+						alert("exist")
+						return
+					}
+				}
+
+				var a = $("#zhuce").serializeArray()
+				dic = {}
+				for(var i in a){
+					var d = a[i]
+					dic[d["name"]]=d["value"]
+				}
+				dic["role"]="user"
+				dic["table"]=pinyin.getFullChars("usermanage")
+				dic["database"]='admin'
+				var t = dic
+				$.post(window.localStorage.baseUrl+'savedata',t,function(data){
+					alert('success')
+					location.reload()
+				})
+			})
+		}
+		function denglu(){
+			var a = $("#denglu").serializeArray()
+			dic = {}
+			for(var i in a){
+				var d = a[i]
+				dic[d["name"]]=d["value"]
+			}
+			dic["table"]=pinyin.getFullChars("usermanage")
+			dic["database"]='admin'
+			$.get(window.localStorage.baseUrl+'getdata',dic,function(data){
+				var arr =  data.data
+				for(var i in arr){
+					var d = arr[i]
+					if (d["username"]==dic["username"]&&d["password"]==dic["password"]) {
+						window.localStorage.nowuser = JSON.stringify(dic)
+						window.localStorage.nowinfor=JSON.stringify(dic)
+						alert("success")
+							location.href="userInfo.html"
+						return
+					}
+				}
+				alert("error")
+			})
+
+		}
+	</script>
+</html>
